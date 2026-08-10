@@ -1,0 +1,34 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,52,&H0000FFFF,&H00FFFFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,4,2,2,80,80,480,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:03.57,Default,,0,0,0,,DID YOU HEAR THE LATEST
+Dialogue: 0,0:00:03.57,0:00:07.14,Default,,0,0,0,,BREAKING NEWS ABOUT THIS AI
+Dialogue: 0,0:00:07.14,0:00:10.00,Default,,0,0,0,,JUST CREATED VIRUSES N?
+Dialogue: 0,0:00:10.00,0:00:14.16,Default,,0,0,0,,IN A MAJOR DEVELOPMENT REPORTED
+Dialogue: 0,0:00:14.16,0:00:18.33,Default,,0,0,0,,BY THE NEW YORK TIMES,
+Dialogue: 0,0:00:18.33,0:00:20.00,Default,,0,0,0,,THIS A.I.
+Dialogue: 0,0:00:20.00,0:00:24.54,Default,,0,0,0,,JUST CREATED VIRUSES NOT FOUND
+Dialogue: 0,0:00:24.54,0:00:29.09,Default,,0,0,0,,IN NATURE THE NEW YORK
+Dialogue: 0,0:00:29.09,0:00:30.00,Default,,0,0,0,,TIMES.
+Dialogue: 0,0:00:30.00,0:00:33.57,Default,,0,0,0,,INDUSTRY ANALYSTS ARE CALLING THIS
+Dialogue: 0,0:00:33.57,0:00:37.14,Default,,0,0,0,,A GAME-CHANGING MOMENT THAT COULD
+Dialogue: 0,0:00:37.14,0:00:40.00,Default,,0,0,0,,RESHAPE THE INDUSTRY FOREVER.
+Dialogue: 0,0:00:40.00,0:00:43.33,Default,,0,0,0,,KEY EXPERTS POINT OUT THAT
+Dialogue: 0,0:00:43.33,0:00:46.66,Default,,0,0,0,,THIS INNOVATION SPEEDS UP DEVELOPMENTS
+Dialogue: 0,0:00:46.66,0:00:50.00,Default,,0,0,0,,WHILE OPENING ENTIRELY NEW POSSIBILITIES.
+Dialogue: 0,0:00:50.00,0:00:51.51,Default,,0,0,0,,AS NEWS CONTINUES TO UNFOLD,
+Dialogue: 0,0:00:51.51,0:00:53.03,Default,,0,0,0,,MILLIONS ARE WATCHING CLOSELY TO
+Dialogue: 0,0:00:53.03,0:00:54.54,Default,,0,0,0,,SEE WHAT HAPPENS NEXT. WHAT
+Dialogue: 0,0:00:54.54,0:00:56.06,Default,,0,0,0,,DO YOU THINK ABOUT THIS
+Dialogue: 0,0:00:56.06,0:00:57.57,Default,,0,0,0,,BREAKTHROUGH? LET US KNOW IN
+Dialogue: 0,0:00:57.57,0:00:59.09,Default,,0,0,0,,THE COMMENTS BELOW AND SUBSCRIBE
+Dialogue: 0,0:00:59.09,0:01:00.00,Default,,0,0,0,,FOR DAILY UPDATES!

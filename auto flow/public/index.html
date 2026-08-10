@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11-Stage Automated News-to-Video Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div>
+          <h1>Auto Short Creator</h1>
+          <p class="subtitle">Autonomous 11-Stage News-to-Video AI Engine</p>
+        </div>
+      </div>
+      <div class="status-badge" id="systemStatus">
+        <span class="pulse-dot"></span> System Ready
+      </div>
+    </header>
+
+    <!-- Main Grid Layout -->
+    <main class="dashboard-grid">
+      <!-- Left Column: Controls & 11-Stage Flow Tracker -->
+      <section class="panel control-panel">
+        <h2 class="section-title"><span>01</span> Topic & News Selection</h2>
+        <div class="input-group">
+          <input type="text" id="topicInput" placeholder="Enter news topic (e.g. Artificial Intelligence, SpaceX, Tech)..." value="Artificial Intelligence">
+          <button id="scrapeBtn" class="btn btn-secondary">🔍 Fetch News</button>
+        </div>
+
+        <div class="trending-topics">
+          <span class="label">Trending Quick Pick:</span>
+          <button class="chip" onclick="setTopic('Artificial Intelligence')">🤖 AI & Tech</button>
+          <button class="chip" onclick="setTopic('SpaceX Starship')">🚀 Space</button>
+          <button class="chip" onclick="setTopic('Global Economy')">📈 Markets</button>
+          <button class="chip" onclick="setTopic('Electric Vehicles')">⚡ EV & Auto</button>
+        </div>
+
+        <div class="news-list" id="newsList">
+          <div class="placeholder-text">Click "Fetch News" or enter a custom topic to load latest headlines.</div>
+        </div>
+
+        <button id="generateBtn" class="btn btn-primary btn-lg btn-full">
+          🚀 Run Full 11-Stage Video Pipeline
+        </button>
+
+        <hr class="divider">
+
+        <h2 class="section-title"><span>02</span> 11-Stage Pipeline Progress</h2>
+        <div class="pipeline-stepper" id="pipelineStepper">
+          <div class="step-item" id="step-1"><span class="step-num">1</span> <span class="step-name">News Scraper</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-2"><span class="step-num">2</span> <span class="step-name">Gemini Script Writer</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-3"><span class="step-num">3</span> <span class="step-name">Scene Splitter</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-4"><span class="step-num">4</span> <span class="step-name">Prompt Generator</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-5"><span class="step-num">5</span> <span class="step-name">Google Flow API</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-6"><span class="step-num">6</span> <span class="step-name">6 Video Clips</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-7"><span class="step-num">7</span> <span class="step-name">Voice Generator</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-8"><span class="step-num">8</span> <span class="step-name">FFmpeg Merge</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-9"><span class="step-num">9</span> <span class="step-name">Subtitles</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-10"><span class="step-num">10</span> <span class="step-name">Thumbnail</span> <span class="step-status">Idle</span></div>
+          <div class="step-item" id="step-11"><span class="step-num">11</span> <span class="step-name">Ready 1 Minute Video</span> <span class="step-status">Idle</span></div>
+        </div>
+
+        <div class="console-box">
+          <div class="console-header">Pipeline Terminal Logs</div>
+          <pre id="consoleLogs">Waiting to start pipeline...</pre>
+        </div>
+      </section>
+
+      <!-- Right Column: Final Video Player, Script & Clip Previews -->
+      <section class="panel preview-panel">
+        <h2 class="section-title"><span>03</span> Ready 1-Minute Video Output</h2>
+        
+        <div class="final-video-container" id="videoContainer">
+          <div class="video-placeholder" id="videoPlaceholder">
+            <div class="play-icon-large">🎬</div>
+            <p>Ready 1-Minute Video will appear here upon completion</p>
+          </div>
+          <video id="finalVideoPlayer" controls class="hidden"></video>
+        </div>
+
+        <div class="download-bar hidden" id="downloadBar">
+          <a id="downloadVideoBtn" download class="btn btn-primary">⬇️ Download Final Video (MP4)</a>
+          <a id="downloadThumbBtn" download class="btn btn-secondary">🖼️ Download Thumbnail (JPG)</a>
+        </div>
+
+        <div class="thumbnail-preview hidden" id="thumbPreview">
+          <h3>Generated High-CTR Thumbnail</h3>
+          <img id="thumbImg" src="" alt="Thumbnail preview">
+        </div>
+
+        <hr class="divider">
+
+        <h2 class="section-title"><span>04</span> Generated Script & Scenes</h2>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('scriptTab')">Gemini Script</button>
+          <button class="tab-btn" onclick="switchTab('scenesTab')">6 Scenes Breakdown</button>
+        </div>
+
+        <div id="scriptTab" class="tab-content active">
+          <div class="script-card">
+            <h4 id="scriptTitle">Script Title</h4>
+            <div class="hook-box" id="scriptHook"><strong>Hook:</strong> Click run to generate...</div>
+            <p id="scriptFull" class="script-text">Full 60-second narration text will be displayed here.</p>
+          </div>
+        </div>
+
+        <div id="scenesTab" class="tab-content">
+          <div class="scenes-grid" id="scenesGrid">
+            <div class="placeholder-text">6 Scenes with video prompts will appear here.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

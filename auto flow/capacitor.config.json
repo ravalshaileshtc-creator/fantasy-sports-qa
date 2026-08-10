@@ -1,0 +1,6 @@
+{
+  "appId": "com.autoflow.shortcreator",
+  "appName": "Auto Short Creator",
+  "webDir": "public",
+  "bundledWebRuntime": false
+}

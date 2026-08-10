@@ -1,0 +1,17 @@
+{
+  "name": "auto-news-video-generator",
+  "version": "1.0.0",
+  "description": "11-Stage Automated News-to-Video Pipeline Web Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "pipeline": "python pipeline.py"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
