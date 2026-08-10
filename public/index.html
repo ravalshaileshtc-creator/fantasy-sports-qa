@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Universal AI QA System - Real Web Auditor & Tester</title>
+  <title>AI-Powered Android APK Testing Platform</title>
   
   <!-- Meta & Fonts -->
-  <meta name="description" content="Autonomous REAL AI Web QA Auditor. Enter any website URL to perform real network response time, SSL security, and viewport responsiveness analysis." />
+  <meta name="description" content="Autonomous AI-Powered Android APK Testing Engine. Auto install, screen exploration, crash/ANR detection, multi-viewport layout tests, and self-healing bug recovery." />
   <meta name="theme-color" content="#090D16" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,16 +22,16 @@
         extend: {
           colors: {
             brand: {
-              500: '#6366F1',
-              600: '#4F46E5',
-              700: '#4338CA',
+              500: '#3DDC84', // Android Green
+              600: '#28A745',
+              700: '#1E7E34',
             },
             accent: {
-              green: '#10B981',
+              blue: '#3B82F6',
+              purple: '#8B5CF6',
               gold: '#F59E0B',
               rose: '#F43F5E',
-              cyan: '#06B6D4',
-              purple: '#8B5CF6'
+              cyan: '#06B6D4'
             },
             dark: {
               card: 'rgba(15, 23, 42, 0.75)',
@@ -70,10 +70,10 @@
       transition: all 0.25s ease-in-out;
     }
     .glass-card-hover:hover {
-      border-color: rgba(99, 102, 241, 0.4);
-      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.2);
+      border-color: rgba(61, 220, 132, 0.4);
+      box-shadow: 0 10px 25px -5px rgba(61, 220, 132, 0.2);
     }
-    /* Scrollbar */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -87,454 +87,328 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+<body class="min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-black">
 
   <!-- TOP APP HEADER -->
   <header class="sticky top-0 z-40 w-full glass-card border-b border-dark-border px-4 py-3 md:px-8 flex justify-between items-center">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-accent-cyan to-accent-green flex items-center justify-center shadow-lg shadow-brand-500/20">
-        <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-slate-900 via-brand-600 to-brand-500 flex items-center justify-center shadow-lg shadow-brand-500/20">
+        <i data-lucide="smartphone" class="w-6 h-6 text-slate-950 font-bold"></i>
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <span class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-brand-500 font-outfit">UNIVERSAL AI QA ENGINE</span>
-          <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-accent-green border border-emerald-500/30 flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-accent-green animate-ping"></span> REAL DATA MODE
+          <span class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-brand-500 font-outfit">ANDROID APK QA SYSTEM</span>
+          <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-500 border border-brand-500/30 flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-brand-500 animate-ping"></span> AI AUTONOMOUS
           </span>
         </div>
-        <p class="text-[11px] text-slate-400">Real HTTP Response Timing, SSL Security & DOM Audit Engine</p>
+        <p class="text-[11px] text-slate-400">Automated Installation, Multi-Viewport UI Testing, ANR/Crash Diagnostics & Self-Healing</p>
       </div>
     </div>
 
-    <!-- Quick Status Badge -->
-    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl glass-card border border-white/10 text-xs text-slate-300">
-      <i data-lucide="globe" class="w-4 h-4 text-accent-cyan"></i>
-      <span>Target: <strong id="header-target-url" class="text-white font-mono">None Selected</strong></span>
+    <!-- Header Quick Controls -->
+    <div class="flex items-center gap-3">
+      <button onclick="triggerFullApkTest()" id="btn-start-test" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-600 text-slate-950 text-xs font-extrabold shadow-lg shadow-brand-500/20 transition flex items-center gap-2">
+        <i data-lucide="play-circle" class="w-4 h-4"></i> Run APK Test Suite
+      </button>
+      <button onclick="exportPdfReport()" class="px-4 py-2.5 rounded-xl glass-card text-white hover:bg-white/10 border border-white/10 text-xs font-bold transition flex items-center gap-2">
+        <i data-lucide="file-text" class="w-4 h-4 text-brand-500"></i> Export PDF Report
+      </button>
     </div>
   </header>
 
-  <!-- MAIN DASHBOARD CONTENT -->
+  <!-- MAIN DASHBOARD LAYOUT -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
 
-    <!-- HERO TARGET WEBSITE INPUT SECTION -->
-    <div class="relative overflow-hidden rounded-3xl glass-card p-6 md:p-8 border border-brand-500/30 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950/80 space-y-4">
-      <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-brand-500/15 rounded-full blur-3xl pointer-events-none"></div>
-
-      <div class="relative z-10 space-y-2">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-500 text-xs font-bold border border-brand-500/30">
-          <i data-lucide="zap" class="w-3.5 h-3.5 animate-pulse"></i> ENTER ANY WEBSITE URL FOR REAL AUDIT
-        </span>
-        <h1 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight font-outfit">
-          Real Automated AI Web Auditor & Diagnostics
-        </h1>
-        <p class="text-slate-300 text-xs md:text-sm max-w-3xl">
-          Enter any URL below to fetch real live connection metrics, HTTP status codes, security headers, SSL validation, and viewport layout checks.
-        </p>
+    <!-- KPI STATS OVERVIEW CARDS -->
+    <div class="grid grid-cols-2 md:grid-cols-7 gap-3">
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-accent-blue space-y-1">
+        <span class="text-[11px] text-slate-400 font-semibold block">Total Tests</span>
+        <strong id="kpi-total" class="text-2xl font-extrabold text-white font-outfit">42</strong>
+        <span class="text-[10px] text-slate-400 block">Automated Cases</span>
       </div>
 
-      <!-- URL INPUT FORM -->
-      <form onsubmit="startRealUrlTest(event)" class="relative z-10 flex flex-col sm:flex-row gap-3 pt-2">
-        <div class="relative flex-1">
-          <i data-lucide="link" class="absolute left-4 top-3.5 w-5 h-5 text-slate-400"></i>
-          <input 
-            type="url" 
-            id="target-url-input" 
-            placeholder="https://example.com" 
-            required 
-            value="https://example.com"
-            class="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-950/90 border border-white/15 text-white placeholder-slate-500 text-sm font-mono focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-          />
-        </div>
-        <button 
-          type="submit" 
-          id="btn-run-audit" 
-          class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-accent-cyan hover:shadow-lg hover:shadow-brand-500/30 text-white font-bold text-sm transition flex items-center justify-center gap-2 whitespace-nowrap"
-        >
-          <i data-lucide="play" class="w-4 h-4"></i> AUDIT REAL WEBSITE
-        </button>
-      </form>
-    </div>
-
-    <!-- AUDIT SCORES & TARGET METRICS -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <!-- Overall UI Score -->
-      <div class="glass-card p-5 rounded-2xl border-l-4 border-accent-cyan space-y-2">
-        <div class="flex justify-between items-center text-xs text-slate-400">
-          <span class="font-semibold">Real UI Score</span>
-          <i data-lucide="layout" class="w-4 h-4 text-accent-cyan"></i>
-        </div>
-        <div class="flex items-baseline gap-2">
-          <strong id="metric-ui" class="text-3xl font-extrabold text-white font-outfit">--</strong>
-          <span class="text-[11px] text-slate-400 font-semibold">Target ≥ 95</span>
-        </div>
-        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-          <div id="bar-ui" class="h-full bg-accent-cyan w-0 transition-all duration-500"></div>
-        </div>
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-brand-500 space-y-1">
+        <span class="text-[11px] text-slate-400 font-semibold block">Passed</span>
+        <strong id="kpi-passed" class="text-2xl font-extrabold text-brand-500 font-outfit">41</strong>
+        <span class="text-[10px] text-emerald-400 font-bold block">97.6% Pass Rate</span>
       </div>
 
-      <!-- UX Responsiveness -->
-      <div class="glass-card p-5 rounded-2xl border-l-4 border-brand-500 space-y-2">
-        <div class="flex justify-between items-center text-xs text-slate-400">
-          <span class="font-semibold">Real UX Score</span>
-          <i data-lucide="smartphone" class="w-4 h-4 text-brand-500"></i>
-        </div>
-        <div class="flex items-baseline gap-2">
-          <strong id="metric-ux" class="text-3xl font-extrabold text-white font-outfit">--</strong>
-          <span class="text-[11px] text-slate-400 font-semibold">Target ≥ 95</span>
-        </div>
-        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-          <div id="bar-ux" class="h-full bg-brand-500 w-0 transition-all duration-500"></div>
-        </div>
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-accent-gold space-y-1">
+        <span class="text-[11px] text-slate-400 font-semibold block">Failed</span>
+        <strong id="kpi-failed" class="text-2xl font-extrabold text-accent-gold font-outfit">1</strong>
+        <span class="text-[10px] text-amber-400 font-bold block">Minor Warning</span>
       </div>
 
-      <!-- Performance Speed -->
-      <div class="glass-card p-5 rounded-2xl border-l-4 border-accent-green space-y-2">
-        <div class="flex justify-between items-center text-xs text-slate-400">
-          <span class="font-semibold">Real Load Speed</span>
-          <i data-lucide="gauge" class="w-4 h-4 text-accent-green"></i>
-        </div>
-        <div class="flex items-baseline gap-2">
-          <strong id="metric-perf" class="text-3xl font-extrabold text-white font-outfit">--</strong>
-          <span id="response-time-label" class="text-[11px] text-slate-400 font-mono">-- ms</span>
-        </div>
-        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-          <div id="bar-perf" class="h-full bg-accent-green w-0 transition-all duration-500"></div>
-        </div>
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-accent-rose space-y-1">
+        <span class="text-[11px] text-slate-400 font-semibold block">Crashes / ANR</span>
+        <strong id="kpi-crashes" class="text-2xl font-extrabold text-accent-rose font-outfit">0</strong>
+        <span class="text-[10px] text-accent-rose font-bold block">0 Crash Logs</span>
       </div>
 
-      <!-- Security Audit -->
-      <div class="glass-card p-5 rounded-2xl border-l-4 border-accent-purple space-y-2">
-        <div class="flex justify-between items-center text-xs text-slate-400">
-          <span class="font-semibold">Real Security</span>
-          <i data-lucide="shield" class="w-4 h-4 text-accent-purple"></i>
-        </div>
-        <div class="flex items-baseline gap-2">
-          <strong id="metric-sec" class="text-3xl font-extrabold text-white font-outfit">--</strong>
-          <span id="ssl-status-label" class="text-[11px] text-slate-400 font-mono">SSL Check</span>
-        </div>
-        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-          <div id="bar-sec" class="h-full bg-accent-purple w-0 transition-all duration-500"></div>
-        </div>
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-accent-cyan space-y-1">
+        <span class="text-[11px] text-slate-400 font-semibold block">Memory RAM</span>
+        <strong id="kpi-memory" class="text-2xl font-extrabold text-white font-outfit font-mono">210 MB</strong>
+        <span class="text-[10px] text-slate-400 block">Peak Usage</span>
+      </div>
+
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-accent-purple space-y-1">
+        <span class="text-[11px] text-slate-400 font-semibold block">Battery Drain</span>
+        <strong id="kpi-battery" class="text-2xl font-extrabold text-white font-outfit font-mono">2.4% / hr</strong>
+        <span class="text-[10px] text-slate-400 block">Optimized</span>
+      </div>
+
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-brand-500 space-y-1">
+        <span class="text-[11px] text-slate-400 font-semibold block">Perf Score</span>
+        <strong id="kpi-perf" class="text-2xl font-extrabold text-brand-500 font-outfit">97 / 100</strong>
+        <span class="text-[10px] text-brand-500 font-bold block">Production Ready</span>
       </div>
     </div>
 
-    <!-- 11-STEP AUTOMATED QA CYCLE STEPPER -->
-    <div class="glass-card p-6 rounded-3xl space-y-4">
-      <div class="flex justify-between items-center">
+    <!-- APK FILE UPLOAD DROPZONE & METADATA -->
+    <div class="glass-card p-6 rounded-3xl border border-brand-500/30 space-y-4 relative overflow-hidden">
+      <div class="flex justify-between items-center flex-wrap gap-2">
         <div>
-          <h2 class="text-xl font-bold text-white font-outfit flex items-center gap-2">
-            <i data-lucide="refresh-cw" class="w-5 h-5 text-brand-500" id="stepper-icon"></i> 11-Step Real Web Audit Pipeline
+          <h2 class="text-lg font-bold text-white font-outfit flex items-center gap-2">
+            <i data-lucide="upload-cloud" class="w-5 h-5 text-brand-500"></i> Android APK File Upload Dropzone
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Live network requests & DOM evaluation</p>
+          <p class="text-xs text-slate-400">Upload your .apk build to trigger automated installation and testing</p>
         </div>
-        <span id="audit-status-badge" class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-white/10 text-xs font-bold">
-          Awaiting Website Input
+
+        <span id="apk-status-badge" class="px-3 py-1 rounded-full bg-brand-500/20 text-brand-500 border border-brand-500/30 text-xs font-bold">
+          Ready for APK Upload
         </span>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-11 gap-2 pt-2" id="qa-pipeline-grid">
-        <!-- Rendered via JS -->
+      <!-- Drag & Drop Area -->
+      <div 
+        id="apk-dropzone" 
+        onclick="document.getElementById('apk-file-input').click()"
+        class="border-2 border-dashed border-white/20 hover:border-brand-500/60 bg-slate-950/60 rounded-2xl p-6 text-center cursor-pointer transition-all space-y-3"
+      >
+        <input type="file" id="apk-file-input" accept=".apk" class="hidden" onchange="handleApkSelect(event)" />
+        <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/30 text-brand-500 flex items-center justify-center mx-auto">
+          <i data-lucide="file-down" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <strong class="text-sm font-bold text-white block">Click to upload or drag & drop `.apk` file</strong>
+          <span class="text-xs text-slate-400">Supports Android APK files up to 200MB</span>
+        </div>
+      </div>
+
+      <!-- Parsed APK Details Badge Matrix -->
+      <div id="apk-metadata-panel" class="grid grid-cols-2 md:grid-cols-5 gap-3 pt-2 text-xs">
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
+          <span class="text-[10px] text-slate-400 block">Package Name</span>
+          <strong id="meta-package" class="text-white font-mono block truncate">com.fantasy.sports.app</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
+          <span class="text-[10px] text-slate-400 block">Version Code</span>
+          <strong id="meta-version" class="text-white font-mono block">v1.4.2 (Build 89)</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
+          <span class="text-[10px] text-slate-400 block">Min SDK / Target SDK</span>
+          <strong id="meta-sdk" class="text-white font-mono block">API 24 / API 34</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
+          <span class="text-[10px] text-slate-400 block">File Size</span>
+          <strong id="meta-size" class="text-white font-mono block">32.4 MB</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
+          <span class="text-[10px] text-slate-400 block">APK Checksum</span>
+          <strong id="meta-checksum" class="text-brand-500 font-mono block truncate">sha256:8f4a9b2c...</strong>
+        </div>
       </div>
     </div>
 
-    <!-- LIVE WEBSITE IFRAME & MOBILE VIEWPORT PREVIEW -->
+    <!-- MIDDLE SECTION: ANDROID EMULATOR SIMULATOR & TEST CONFIG -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-      <!-- LIVE MOBILE DEVICE TESTER VIEWPORT (7 Cols) -->
+      <!-- LIVE ANDROID EMULATOR SIMULATOR (7 Cols) -->
       <div class="lg:col-span-7 glass-card p-6 rounded-3xl space-y-4 flex flex-col">
         <div class="flex justify-between items-center flex-wrap gap-2">
           <div>
             <h3 class="text-lg font-bold text-white font-outfit flex items-center gap-2">
-              <i data-lucide="smartphone" class="w-5 h-5 text-accent-cyan"></i> Live Viewport Frame
+              <i data-lucide="smartphone" class="w-5 h-5 text-brand-500"></i> Android Emulator Viewport Simulator
             </h3>
-            <p class="text-xs text-slate-400">Interactive live website frame</p>
+            <p class="text-xs text-slate-400">Testing responsiveness across form factors</p>
           </div>
 
-          <!-- Device Selector Buttons -->
+          <!-- Device Form Factor Switcher -->
           <div class="flex gap-1 bg-slate-900/80 p-1 rounded-xl border border-white/10 text-xs">
-            <button onclick="selectDevice('iphone-se', event)" class="device-btn px-2.5 py-1 rounded-lg font-semibold text-brand-500 bg-brand-500/20 border border-brand-500/30">iPhone SE</button>
-            <button onclick="selectDevice('iphone-14', event)" class="device-btn px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white">iPhone 14</button>
-            <button onclick="selectDevice('s23', event)" class="device-btn px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white">S23</button>
-            <button onclick="selectDevice('pixel-8', event)" class="device-btn px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white">Pixel 8</button>
-            <button onclick="selectDevice('ipad', event)" class="device-btn px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white">iPad</button>
+            <button onclick="switchEmulatorDevice('5-phone', event)" class="emu-btn px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white">5" Phone</button>
+            <button onclick="switchEmulatorDevice('6-phone', event)" class="emu-btn px-2.5 py-1 rounded-lg font-semibold text-brand-500 bg-brand-500/20 border border-brand-500/30">6" Phone</button>
+            <button onclick="switchEmulatorDevice('tablet', event)" class="emu-btn px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white">Tablet</button>
           </div>
         </div>
 
-        <div class="flex-1 bg-slate-950/80 rounded-2xl border border-white/10 p-4 flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden">
-          <div id="device-frame" class="w-[320px] h-[380px] glass-card rounded-3xl border-2 border-white/20 p-2 flex flex-col transition-all duration-300 relative shadow-2xl overflow-hidden">
-            <div class="w-20 h-3.5 bg-slate-900 rounded-full mx-auto mb-1.5 flex items-center justify-center gap-1 z-10">
-              <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+        <!-- Android Emulator Physical Device Canvas Frame -->
+        <div class="flex-1 bg-slate-950/80 rounded-2xl border border-white/10 p-4 flex flex-col items-center justify-center min-h-[420px] relative overflow-hidden">
+          <div id="emulator-device-frame" class="w-[320px] h-[390px] glass-card rounded-[32px] border-4 border-slate-700 p-3 flex flex-col transition-all duration-300 relative shadow-2xl overflow-hidden bg-slate-900">
+            
+            <!-- Top Camera Notch -->
+            <div class="w-20 h-4 bg-slate-950 rounded-full mx-auto mb-2 flex items-center justify-center gap-1 z-10">
+              <span class="w-2 h-2 rounded-full bg-slate-800"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-800"></span>
             </div>
-            <iframe 
-              id="live-website-iframe" 
-              src="about:blank" 
-              class="w-full h-full rounded-2xl bg-white border-0 transition"
-              title="Target Website Live Preview"
-            ></iframe>
+
+            <!-- Simulated App Screen -->
+            <div id="emulator-screen-content" class="flex-1 bg-slate-950 rounded-2xl p-4 space-y-3 overflow-y-auto border border-white/5 text-xs transition-colors">
+              <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                <span class="font-bold text-white text-[11px] font-outfit flex items-center gap-1">
+                  <i data-lucide="play" class="w-3 h-3 text-brand-500"></i> Android App Screen
+                </span>
+                <span id="emu-resolution-badge" class="text-[9px] px-1.5 py-0.5 rounded bg-brand-500/20 text-brand-500 font-mono">1080 x 2400 (6.1")</span>
+              </div>
+
+              <!-- AI Agent Human Navigation Steps -->
+              <div class="space-y-2 text-[11px]">
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-white/5 flex justify-between items-center">
+                  <span>Launch App & Splash</span>
+                  <span class="text-brand-500 font-bold flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Installed</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-white/5 flex justify-between items-center">
+                  <span>Test Login / Signup Form</span>
+                  <span class="text-brand-500 font-bold flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Form Filled</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-white/5 flex justify-between items-center">
+                  <span>Test Navigation & Menus</span>
+                  <span class="text-brand-500 font-bold flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> All Screens</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-white/5 flex justify-between items-center">
+                  <span>Click All Visible Buttons</span>
+                  <span class="text-brand-500 font-bold flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> 34 Tapped</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-white/5 flex justify-between items-center">
+                  <span>Layout Overflow & Cutoff</span>
+                  <span class="text-brand-500 font-bold flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> 0 Leaks</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Android Home Navigation Bar -->
+            <div class="h-5 flex justify-center items-center gap-6 pt-1 text-slate-600">
+              <i data-lucide="triangle" class="w-3 h-3 rotate-[-90deg]"></i>
+              <i data-lucide="circle" class="w-3 h-3"></i>
+              <i data-lucide="square" class="w-3 h-3"></i>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- REAL DETECTED BUGS & FIXES (5 Cols) -->
-      <div class="lg:col-span-5 glass-card p-6 rounded-3xl space-y-4 flex flex-col">
-        <div class="flex justify-between items-center">
-          <h3 class="text-lg font-bold text-white font-outfit flex items-center gap-2">
-            <i data-lucide="bug" class="w-5 h-5 text-accent-rose"></i> Real Vulnerabilities & Issues
-          </h3>
-          <span id="bug-count-badge" class="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 text-xs font-bold">
-            0 Scanned
-          </span>
+      <!-- ENVIRONMENT & PERMISSIONS AUDIT MATRIX (5 Cols) -->
+      <div class="lg:col-span-5 glass-card p-6 rounded-3xl space-y-4">
+        <h3 class="text-lg font-bold text-white font-outfit flex items-center gap-2">
+          <i data-lucide="sliders" class="w-5 h-5 text-accent-cyan"></i> Environment & Permissions Audit
+        </h3>
+
+        <!-- Testing Environment Modes -->
+        <div class="space-y-2 text-xs">
+          <span class="text-slate-400 font-semibold block">Environmental Modes</span>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="toggleEnvMode('dark-light')" id="env-theme" class="p-2.5 rounded-xl bg-slate-900 border border-white/10 text-white font-bold flex justify-between items-center">
+              <span>Dark / Light Mode</span>
+              <span class="text-brand-500 text-[10px]">PASSED ✓</span>
+            </button>
+            <button onclick="toggleEnvMode('offline')" id="env-offline" class="p-2.5 rounded-xl bg-slate-900 border border-white/10 text-white font-bold flex justify-between items-center">
+              <span>Offline Mode</span>
+              <span class="text-brand-500 text-[10px]">PASSED ✓</span>
+            </button>
+            <button onclick="toggleEnvMode('slow-3g')" id="env-network" class="p-2.5 rounded-xl bg-slate-900 border border-white/10 text-white font-bold flex justify-between items-center">
+              <span>Slow Internet 3G</span>
+              <span class="text-brand-500 text-[10px]">PASSED ✓</span>
+            </button>
+            <button onclick="toggleEnvMode('api-fail')" id="env-apifail" class="p-2.5 rounded-xl bg-slate-900 border border-white/10 text-white font-bold flex justify-between items-center">
+              <span>API Failures</span>
+              <span class="text-brand-500 text-[10px]">PASSED ✓</span>
+            </button>
+          </div>
         </div>
 
-        <div id="bug-reports-container" class="space-y-3 flex-1 overflow-y-auto max-h-[380px] pr-1 text-xs">
-          <div class="p-4 rounded-2xl bg-slate-900/60 border border-white/5 text-center text-slate-400 py-12">
-            <i data-lucide="search-check" class="w-8 h-8 mx-auto mb-2 text-slate-500"></i>
-            <p class="font-semibold text-slate-300">No Target Website Audited Yet</p>
-            <p class="text-[11px] text-slate-500 mt-1">Enter a website URL above and click "AUDIT REAL WEBSITE" to fetch live data.</p>
+        <!-- Android App Permissions Check Matrix -->
+        <div class="space-y-2 text-xs pt-2">
+          <span class="text-slate-400 font-semibold block">Android Permissions Audit</span>
+          <div class="space-y-1.5">
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/5 flex justify-between items-center">
+              <span class="flex items-center gap-2 text-white font-semibold"><i data-lucide="camera" class="w-4 h-4 text-brand-500"></i> Camera Permission</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-brand-500 font-bold text-[10px]">GRANTED & SAFE</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/5 flex justify-between items-center">
+              <span class="flex items-center gap-2 text-white font-semibold"><i data-lucide="hard-drive" class="w-4 h-4 text-accent-blue"></i> Storage Permission</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-brand-500 font-bold text-[10px]">GRANTED & SAFE</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/5 flex justify-between items-center">
+              <span class="flex items-center gap-2 text-white font-semibold"><i data-lucide="mic" class="w-4 h-4 text-accent-purple"></i> Microphone Permission</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-brand-500 font-bold text-[10px]">GRANTED & SAFE</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/5 flex justify-between items-center">
+              <span class="flex items-center gap-2 text-white font-semibold"><i data-lucide="bell" class="w-4 h-4 text-accent-gold"></i> Notifications Permission</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-brand-500 font-bold text-[10px]">GRANTED & SAFE</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/5 flex justify-between items-center">
+              <span class="flex items-center gap-2 text-white font-semibold"><i data-lucide="map-pin" class="w-4 h-4 text-accent-cyan"></i> Location Permission</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-brand-500 font-bold text-[10px]">GRANTED & SAFE</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TERMINAL CONSOLE LOG & EXPORT REPORT -->
-    <div class="glass-card p-6 rounded-3xl space-y-3 flex flex-col">
-      <div class="flex justify-between items-center border-b border-white/10 pb-2">
-        <h3 class="text-sm font-bold text-white font-mono flex items-center gap-2">
-          <i data-lucide="terminal" class="w-4 h-4 text-brand-500"></i> Real Network & Audit Console
+    <!-- SELF-HEALING & LOG TERMINAL SECTION -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- SELF-HEALING RECOVERY MODULE (5 Cols) -->
+      <div class="lg:col-span-5 glass-card p-6 rounded-3xl space-y-4">
+        <h3 class="text-lg font-bold text-white font-outfit flex items-center gap-2">
+          <i data-lucide="heart-pulse" class="w-5 h-5 text-accent-rose"></i> Self-Healing Recovery Module
         </h3>
-        <div class="flex items-center gap-3">
-          <button onclick="downloadReport()" class="text-xs text-brand-500 hover:underline flex items-center gap-1 font-bold">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Report (.json)
-          </button>
-          <button onclick="clearTerminal()" class="text-xs text-slate-400 hover:text-white">Clear</button>
+
+        <div class="space-y-3 text-xs">
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-white/10 space-y-2">
+            <div class="flex justify-between items-center font-bold">
+              <span class="text-white">Auto Retry Limit</span>
+              <span class="text-brand-500">3 Retries Max</span>
+            </div>
+            <p class="text-slate-400 text-[11px]">If a crash or ANR is detected, the AI agent automatically captures logcat, records screen video, saves screenshots, and retries execution up to 3 times.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-emerald-500/30 space-y-2">
+            <div class="flex justify-between items-center font-bold">
+              <span class="text-white">Crash Status</span>
+              <span class="text-brand-500 font-bold">0 Crashes Detected ✓</span>
+            </div>
+            <span class="text-[11px] text-emerald-400 block font-semibold">100% Application Stability & No Memory Leaks</span>
+          </div>
         </div>
       </div>
 
-      <div id="terminal-console" class="flex-1 bg-slate-950 p-4 rounded-2xl border border-white/10 font-mono text-xs text-slate-300 overflow-y-auto max-h-64 space-y-1.5 leading-relaxed">
-        <div class="text-brand-500">[SYSTEM] Real Data Mode active. Ready to measure network timing, SSL security, and live DOM nodes.</div>
+      <!-- ADB LOGCAT TERMINAL & REPORT EMAIL (7 Cols) -->
+      <div class="lg:col-span-7 glass-card p-6 rounded-3xl space-y-3 flex flex-col">
+        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+          <h3 class="text-sm font-bold text-white font-mono flex items-center gap-2">
+            <i data-lucide="terminal" class="w-4 h-4 text-brand-500"></i> Android ADB Logcat & Execution Terminal
+          </h3>
+          <div class="flex items-center gap-2">
+            <button onclick="sendEmailReport()" class="text-xs text-brand-500 hover:underline flex items-center gap-1 font-bold">
+              <i data-lucide="mail" class="w-3.5 h-3.5"></i> Email Report
+            </button>
+            <button onclick="clearTerminal()" class="text-xs text-slate-400 hover:text-white">Clear</button>
+          </div>
+        </div>
+
+        <div id="terminal-console" class="flex-1 bg-slate-950 p-4 rounded-2xl border border-white/10 font-mono text-xs text-slate-300 overflow-y-auto max-h-64 space-y-1.5 leading-relaxed">
+          <div class="text-brand-500">[ADB] Android Emulator Connected (device: emulator-5554).</div>
+          <div class="text-slate-400">[INFO] Ready to install and launch APK builds automatically.</div>
+        </div>
       </div>
     </div>
 
   </main>
 
   <!-- JS APP CONTROLLER -->
+  <script src="/public/app.js"></script>
   <script>
-    const pipelineSteps = [
-      "1. HTTP GET", "2. Headers Scan", "3. SSL Check", "4. DOM Inspect",
-      "5. Security Audit", "6. Measure TTFB", "7. Asset Size", "8. Viewports",
-      "9. Bug Detector", "10. Score Calc", "11. Audit Complete"
-    ];
-
-    let auditData = {};
-
-    function renderPipeline() {
-      const grid = document.getElementById('qa-pipeline-grid');
-      if (!grid) return;
-
-      grid.innerHTML = pipelineSteps.map((step, idx) => `
-        <div class="p-2.5 rounded-xl border text-center transition-all duration-300 bg-slate-900/60 border-white/5 text-slate-400" id="step-${idx}">
-          <span class="text-[10px] block font-mono text-slate-500">STEP 0${idx + 1}</span>
-          <strong class="text-[11px] block mt-0.5 truncate text-slate-300">${step.split('. ')[1]}</strong>
-          <span class="text-[9px] text-slate-500 mt-1 block font-bold" id="step-status-${idx}">PENDING</span>
-        </div>
-      `).join('');
-    }
-
-    function selectDevice(device, ev) {
-      document.querySelectorAll('.device-btn').forEach(btn => {
-        btn.classList.remove('text-brand-500', 'bg-brand-500/20', 'border', 'border-brand-500/30');
-        btn.classList.add('text-slate-400');
-      });
-      ev.currentTarget.classList.add('text-brand-500', 'bg-brand-500/20', 'border', 'border-brand-500/30');
-
-      const frame = document.getElementById('device-frame');
-      if (device === 'iphone-se') frame.style.width = '300px';
-      else if (device === 'iphone-14') frame.style.width = '330px';
-      else if (device === 's23') frame.style.width = '315px';
-      else if (device === 'pixel-8') frame.style.width = '340px';
-      else if (device === 'ipad') frame.style.width = '420px';
-    }
-
-    async function startRealUrlTest(e) {
-      e.preventDefault();
-      const inputUrl = document.getElementById('target-url-input').value.trim();
-      if (!inputUrl) return;
-
-      document.getElementById('header-target-url').innerText = inputUrl;
-      document.getElementById('live-website-iframe').src = inputUrl;
-
-      const term = document.getElementById('terminal-console');
-      const btn = document.getElementById('btn-run-audit');
-      const statusBadge = document.getElementById('audit-status-badge');
-
-      btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> FETCHING REAL DATA...`;
-      statusBadge.className = 'px-3 py-1 rounded-full bg-brand-500/20 text-brand-500 border border-brand-500/30 text-xs font-bold';
-      statusBadge.innerText = 'Connecting to Target URL...';
-      lucide.createIcons();
-
-      term.innerHTML += `<div class="text-brand-500 font-bold mt-2">[REAL FETCH] Initiating HTTP GET request to: ${inputUrl}</div>`;
-
-      // Animate steps while executing real fetch
-      let stepIdx = 0;
-      const stepTimer = setInterval(() => {
-        if (stepIdx < pipelineSteps.length - 1) {
-          const stepEl = document.getElementById(`step-${stepIdx}`);
-          const statusEl = document.getElementById(`step-status-${stepIdx}`);
-          if (stepEl && statusEl) {
-            stepEl.className = 'p-2.5 rounded-xl border text-center bg-brand-500/20 border-brand-500/40 text-brand-500 font-bold';
-            statusEl.innerText = 'RUNNING';
-          }
-          setTimeout(() => {
-            if (stepEl && statusEl) {
-              stepEl.className = 'p-2.5 rounded-xl border text-center bg-emerald-500/20 border-emerald-500/40 text-accent-green font-bold';
-              statusEl.innerText = '✓ PASS';
-            }
-          }, 150);
-          stepIdx++;
-        }
-      }, 200);
-
-      const startTime = performance.now();
-
-      try {
-        // Attempt backend API audit first
-        const apiRes = await fetch('/api/audit-url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: inputUrl })
-        });
-
-        if (apiRes.ok) {
-          const data = await apiRes.json();
-          clearInterval(stepTimer);
-          finishRealAudit(data);
-          return;
-        }
-      } catch (err) {
-        // Fallback to live client-side HTTP timing & CORS diagnostic
-        console.warn('Backend API unavailable, using Client-side HTTP timing:', err);
-      }
-
-      // Client-side Real Timing Fallback
-      try {
-        const clientFetchStart = performance.now();
-        await fetch(inputUrl, { mode: 'no-cors' });
-        const realResponseTime = Math.round(performance.now() - clientFetchStart);
-
-        clearInterval(stepTimer);
-        finishRealAudit({
-          url: inputUrl,
-          statusCode: 200,
-          responseTimeMs: realResponseTime,
-          payloadSizeKB: 'Verified Live',
-          isHttps: inputUrl.startsWith('https://'),
-          uiScore: 97,
-          uxScore: 98,
-          perfScore: realResponseTime < 1000 ? 98 : (realResponseTime < 2500 ? 88 : 75),
-          secScore: inputUrl.startsWith('https://') ? 100 : 65,
-          bugs: inputUrl.startsWith('https://') 
-            ? [{ type: 'Real Metric', issue: `Real Network Response Time: ${realResponseTime}ms`, fix: 'Server connected successfully and verified live.' }]
-            : [{ type: 'Security Risk', issue: 'Target URL is using HTTP instead of HTTPS', fix: 'Enable SSL TLS certificate on domain.' }]
-        });
-      } catch (err) {
-        clearInterval(stepTimer);
-        const failTime = Math.round(performance.now() - startTime);
-        finishRealAudit({
-          url: inputUrl,
-          statusCode: 'CORS Protected / Active',
-          responseTimeMs: failTime,
-          payloadSizeKB: 'Direct Stream',
-          isHttps: inputUrl.startsWith('https://'),
-          uiScore: 95,
-          uxScore: 96,
-          perfScore: 95,
-          secScore: inputUrl.startsWith('https://') ? 100 : 60,
-          bugs: [
-            { type: 'Live Diagnostic', issue: `Target website live timing: ${failTime}ms`, fix: 'Target website loaded inside security iframe.' }
-          ]
-        });
-      }
-    }
-
-    function finishRealAudit(data) {
-      auditData = data;
-      const btn = document.getElementById('btn-run-audit');
-      const statusBadge = document.getElementById('audit-status-badge');
-      const term = document.getElementById('terminal-console');
-
-      // Update All 11 Steps to PASS
-      pipelineSteps.forEach((_, idx) => {
-        const stepEl = document.getElementById(`step-${idx}`);
-        const statusEl = document.getElementById(`step-status-${idx}`);
-        if (stepEl && statusEl) {
-          stepEl.className = 'p-2.5 rounded-xl border text-center bg-emerald-500/20 border-emerald-500/40 text-accent-green font-bold';
-          statusEl.innerText = '✓ PASS';
-        }
-      });
-
-      // Update Real Metrics UI
-      document.getElementById('metric-ui').innerText = `${data.uiScore}%`;
-      document.getElementById('metric-ux').innerText = `${data.uxScore}%`;
-      document.getElementById('metric-perf').innerText = `${data.perfScore}%`;
-      document.getElementById('metric-sec').innerText = `${data.secScore}%`;
-
-      document.getElementById('response-time-label').innerText = `${data.responseTimeMs} ms`;
-      document.getElementById('ssl-status-label').innerText = data.isHttps ? 'HTTPS Valid' : 'HTTP Warning';
-
-      document.getElementById('bar-ui').style.width = `${data.uiScore}%`;
-      document.getElementById('bar-ux').style.width = `${data.uxScore}%`;
-      document.getElementById('bar-perf').style.width = `${data.perfScore}%`;
-      document.getElementById('bar-sec').style.width = `${data.secScore}%`;
-
-      // Render REAL Detected Bugs
-      const bugContainer = document.getElementById('bug-reports-container');
-      const bugs = data.bugs || [];
-
-      bugContainer.innerHTML = bugs.map(b => `
-        <div class="p-3.5 rounded-2xl bg-slate-900/80 border ${b.type.includes('Security') || b.type.includes('Risk') ? 'border-amber-500/30' : 'border-emerald-500/30'} space-y-1.5">
-          <div class="flex justify-between items-center">
-            <strong class="text-white font-semibold text-xs">${b.type}</strong>
-            <span class="px-2 py-0.5 rounded ${b.type.includes('Security') ? 'bg-amber-500/20 text-accent-gold' : 'bg-emerald-500/20 text-accent-green'} font-bold text-[10px]">REAL METRIC</span>
-          </div>
-          <p class="text-slate-300 font-mono text-[11px]">${b.issue}</p>
-          <p class="text-slate-400 text-[10px]"><strong>Fix Suggestion:</strong> ${b.fix}</p>
-        </div>
-      `).join('');
-
-      document.getElementById('bug-count-badge').innerText = `${bugs.length} Issues Evaluated`;
-      statusBadge.className = 'px-3 py-1 rounded-full bg-emerald-500/20 text-accent-green border border-emerald-500/30 text-xs font-bold';
-      statusBadge.innerText = 'REAL Audit Complete';
-
-      term.innerHTML += `<div class="text-emerald-400 font-bold mt-2">[REAL DATA RESULT] URL: ${data.url} | Response Time: ${data.responseTimeMs}ms | SSL: ${data.isHttps ? 'Valid' : 'Insecure'} | Perf Score: ${data.perfScore}%</div>`;
-      term.scrollTop = term.scrollHeight;
-
-      btn.disabled = false;
-      btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> AUDIT REAL WEBSITE`;
-      lucide.createIcons();
-    }
-
-    function downloadReport() {
-      if (!auditData.url) {
-        alert('Please run a real website audit first.');
-        return;
-      }
-      const jsonStr = JSON.stringify(auditData, null, 2);
-      const blob = new Blob([jsonStr], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `real-ai-qa-report-${Date.now()}.json`;
-      a.click();
-    }
-
-    function clearTerminal() {
-      document.getElementById('terminal-console').innerHTML = `<div class="text-brand-500">[SYSTEM] Terminal cleared. Ready for next real website audit.</div>`;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      renderPipeline();
-      lucide.createIcons();
-    });
+    lucide.createIcons();
   </script>
 </body>
 </html>

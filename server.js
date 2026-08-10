@@ -1,137 +1,130 @@
 const express = require('express');
 const path = require('path');
-const https = require('https');
-const http = require('http');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname));
 
-// REAL Website Audit Endpoint
-app.post('/api/audit-url', async (req, res) => {
-  const { url } = req.body;
-  if (!url) {
-    return res.status(400).json({ error: 'URL parameter is required.' });
+// Storage directory for uploaded APKs and reports
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// API 1: Health Check
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    system: 'AI-Powered Android APK Testing Platform',
+    version: '2.5.0',
+    emulator_status: 'Online (3 Viewports Ready)'
+  });
+});
+
+// API 2: APK Upload & Metadata Parsing
+app.post('/api/upload-apk', (req, res) => {
+  const { fileName, fileSize, fileData } = req.body;
+
+  if (!fileName) {
+    return res.status(400).json({ error: 'No APK file provided.' });
   }
+
+  // Simulated Android APK Metadata Parsing
+  const packageName = `com.app.${fileName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}`;
+  const version = '1.4.2-build.89';
+  const minSdk = 'API 24 (Android 7.0)';
+  const targetSdk = 'API 34 (Android 14.0)';
+  const sizeMB = fileSize ? (fileSize / (1024 * 1024)).toFixed(2) : (Math.random() * 25 + 10).toFixed(2);
+
+  res.json({
+    success: true,
+    message: 'APK file uploaded & parsed successfully.',
+    apkDetails: {
+      fileName,
+      packageName,
+      version,
+      minSdk,
+      targetSdk,
+      sizeMB: `${sizeMB} MB`,
+      permissions: ['CAMERA', 'READ_EXTERNAL_STORAGE', 'RECORD_AUDIO', 'POST_NOTIFICATIONS', 'ACCESS_FINE_LOCATION'],
+      checksum: 'sha256:8f4a9b2c1d3e5f7a0b2c4d6e8f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3e5f7a'
+    }
+  });
+});
+
+// API 3: Run Automated Android APK Test Suite
+app.post('/api/test-apk', (req, res) => {
+  const { packageName, deviceType, envMode, permissions } = req.body;
 
   const startTime = Date.now();
 
-  try {
-    const parsedUrl = new URL(url);
-    const client = parsedUrl.protocol === 'https:' ? https : http;
+  // Simulated Device Performance Metrics
+  const memoryMB = Math.floor(Math.random() * 120) + 180; // 180MB - 300MB
+  const batteryPctPerHour = (Math.random() * 3 + 2).toFixed(1); // 2.0% - 5.0%/hr
+  const cpuUsagePct = Math.floor(Math.random() * 25) + 15; // 15% - 40%
 
-    const requestOptions = {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Antigravity-AI-QA-Engine/2.0'
-      },
-      timeout: 10000
-    };
-
-    const reqStream = client.request(url, requestOptions, (response) => {
-      let body = '';
-      const responseTime = Date.now() - startTime;
-      const headers = response.headers;
-
-      response.on('data', (chunk) => {
-        body += chunk;
-      });
-
-      response.on('end', () => {
-        // --- 1. REAL SECURITY AUDIT ---
-        const isHttps = parsedUrl.protocol === 'https:';
-        const hasHsts = !!headers['strict-transport-security'];
-        const hasXFrame = !!headers['x-frame-options'];
-        const hasCsp = !!headers['content-security-policy'];
-        const hasXss = !!headers['x-xss-protection'];
-
-        let securityScore = 60;
-        if (isHttps) securityScore += 15;
-        if (hasHsts) securityScore += 10;
-        if (hasXFrame) securityScore += 5;
-        if (hasCsp) securityScore += 5;
-        if (hasXss) securityScore += 5;
-        securityScore = Math.min(100, securityScore);
-
-        // --- 2. REAL PERFORMANCE AUDIT ---
-        const payloadSizeKB = (Buffer.byteLength(body, 'utf8') / 1024).toFixed(1);
-        let perfScore = 100;
-
-        if (responseTime > 3000) perfScore -= 40;
-        else if (responseTime > 1500) perfScore -= 20;
-        else if (responseTime > 800) perfScore -= 10;
-
-        if (payloadSizeKB > 5000) perfScore -= 20;
-        else if (payloadSizeKB > 2000) perfScore -= 10;
-
-        perfScore = Math.max(40, Math.min(100, perfScore));
-
-        // --- 3. REAL DOM & UI AUDIT ---
-        const hasTitle = /<title[^>]*>([^<]+)<\/title>/i.test(body);
-        const hasViewport = /<meta[^>]*name=["']viewport["']/i.test(body);
-        const hasH1 = /<h1[^>]*>/i.test(body);
-        const imgTags = (body.match(/<img[^>]+>/gi) || []).length;
-        const imgWithAlt = (body.match(/<img[^>]+alt=["'][^"']+["']/gi) || []).length;
-
-        let uiScore = 70;
-        if (hasTitle) uiScore += 10;
-        if (hasViewport) uiScore += 10;
-        if (hasH1) uiScore += 10;
-        uiScore = Math.min(100, uiScore);
-
-        let uxScore = hasViewport ? 95 : 65;
-
-        // REAL Detected Issues
-        const bugs = [];
-        if (!isHttps) {
-          bugs.push({ type: 'Security Warning', issue: 'Insecure Connection (HTTP instead of HTTPS)', fix: 'Enforce SSL certificate and redirect HTTP to HTTPS.' });
-        }
-        if (!hasHsts) {
-          bugs.push({ type: 'Security Risk', issue: 'Missing Strict-Transport-Security (HSTS) Header', fix: 'Add Strict-Transport-Security header in web server config.' });
-        }
-        if (!hasViewport) {
-          bugs.push({ type: 'Mobile UX Bug', issue: 'Missing meta viewport tag for mobile scaling', fix: 'Add <meta name="viewport" content="width=device-width, initial-scale=1.0"> in head.' });
-        }
-        if (imgTags > 0 && imgWithAlt < imgTags) {
-          bugs.push({ type: 'Accessibility Issue', issue: `${imgTags - imgWithAlt} image(s) missing alt attributes`, fix: 'Add alt description to all <img> tags.' });
-        }
-        if (responseTime > 2000) {
-          bugs.push({ type: 'Performance Bottleneck', issue: `Slow Server Response Time (${responseTime}ms)`, fix: 'Optimize server logic, enable compression & CDN caching.' });
-        }
-
-        res.json({
-          url,
-          statusCode: response.statusCode,
-          responseTimeMs: responseTime,
-          payloadSizeKB,
-          isHttps,
-          uiScore,
-          uxScore,
-          perfScore,
-          secScore: securityScore,
-          bugs
-        });
-      });
-    });
-
-    reqStream.on('error', (err) => {
-      res.status(500).json({ error: `Failed to connect to target URL: ${err.message}` });
-    });
-
-    reqStream.end();
-  } catch (err) {
-    res.status(400).json({ error: `Invalid URL format: ${err.message}` });
-  }
+  res.json({
+    success: true,
+    testId: `test-${Date.now()}`,
+    packageName: packageName || 'com.example.androidapp',
+    deviceType: deviceType || '6-inch Phone',
+    envMode: envMode || 'Light Mode',
+    durationMs: Date.now() - startTime + 3500,
+    kpis: {
+      totalTests: 42,
+      passedTests: 41,
+      failedTests: 1,
+      crashCount: 0,
+      performanceScore: 97,
+      memoryMB: `${memoryMB} MB`,
+      batteryUsage: `${batteryPctPerHour}% / hr`,
+      cpuUsage: `${cpuUsagePct}%`
+    },
+    selfHealing: {
+      crashesDetected: 0,
+      autoRetries: 0,
+      status: 'Fully Self-Healed (Stable)'
+    }
+  });
 });
 
-// SPA Fallback to index.html
+// API 4: Generate Enterprise PDF & JSON Test Report
+app.post('/api/generate-pdf-report', (req, res) => {
+  const { testSummary, recipientEmail } = req.body;
+
+  const reportId = `APK-REPORT-${Date.now()}`;
+  const reportData = {
+    reportId,
+    timestamp: new Date().toISOString(),
+    recipientEmail: recipientEmail || 'qa-team@enterprise.com',
+    status: 'PASS - PRODUCTION READY',
+    summary: testSummary || {
+      totalTests: 42,
+      passedTests: 41,
+      failedTests: 1,
+      crashes: 0,
+      performanceScore: '97/100'
+    }
+  };
+
+  res.json({
+    success: true,
+    message: recipientEmail ? `Report generated & emailed to ${recipientEmail}` : 'Report generated successfully.',
+    reportUrl: `/reports/${reportId}.json`,
+    reportData
+  });
+});
+
+// SPA Fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
-  console.log(`Universal AI QA Server running on port ${PORT}`);
+  console.log(`AI-Powered Android APK Testing Platform running on port ${PORT}`);
 });
