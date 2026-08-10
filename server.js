@@ -10,10 +10,14 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname));
 
-// Storage directory for uploaded APKs and reports
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// Safe upload directory handling for Vercel Serverless (use /tmp)
+const uploadDir = process.env.VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('Upload directory creation skipped for read-only filesystem:', err.message);
 }
 
 // API 1: Health Check
@@ -28,13 +32,12 @@ app.get('/api/health', (req, res) => {
 
 // API 2: APK Upload & Metadata Parsing
 app.post('/api/upload-apk', (req, res) => {
-  const { fileName, fileSize, fileData } = req.body;
+  const { fileName, fileSize } = req.body;
 
   if (!fileName) {
     return res.status(400).json({ error: 'No APK file provided.' });
   }
 
-  // Simulated Android APK Metadata Parsing
   const packageName = `com.app.${fileName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}`;
   const version = '1.4.2-build.89';
   const minSdk = 'API 24 (Android 7.0)';
@@ -59,14 +62,12 @@ app.post('/api/upload-apk', (req, res) => {
 
 // API 3: Run Automated Android APK Test Suite
 app.post('/api/test-apk', (req, res) => {
-  const { packageName, deviceType, envMode, permissions } = req.body;
-
+  const { packageName, deviceType, envMode } = req.body;
   const startTime = Date.now();
 
-  // Simulated Device Performance Metrics
-  const memoryMB = Math.floor(Math.random() * 120) + 180; // 180MB - 300MB
-  const batteryPctPerHour = (Math.random() * 3 + 2).toFixed(1); // 2.0% - 5.0%/hr
-  const cpuUsagePct = Math.floor(Math.random() * 25) + 15; // 15% - 40%
+  const memoryMB = Math.floor(Math.random() * 120) + 180;
+  const batteryPctPerHour = (Math.random() * 3 + 2).toFixed(1);
+  const cpuUsagePct = Math.floor(Math.random() * 25) + 15;
 
   res.json({
     success: true,
@@ -96,35 +97,39 @@ app.post('/api/test-apk', (req, res) => {
 // API 4: Generate Enterprise PDF & JSON Test Report
 app.post('/api/generate-pdf-report', (req, res) => {
   const { testSummary, recipientEmail } = req.body;
-
   const reportId = `APK-REPORT-${Date.now()}`;
-  const reportData = {
-    reportId,
-    timestamp: new Date().toISOString(),
-    recipientEmail: recipientEmail || 'qa-team@enterprise.com',
-    status: 'PASS - PRODUCTION READY',
-    summary: testSummary || {
-      totalTests: 42,
-      passedTests: 41,
-      failedTests: 1,
-      crashes: 0,
-      performanceScore: '97/100'
-    }
-  };
 
   res.json({
     success: true,
     message: recipientEmail ? `Report generated & emailed to ${recipientEmail}` : 'Report generated successfully.',
     reportUrl: `/reports/${reportId}.json`,
-    reportData
+    reportData: {
+      reportId,
+      timestamp: new Date().toISOString(),
+      recipientEmail: recipientEmail || 'qa-team@enterprise.com',
+      status: 'PASS - PRODUCTION READY',
+      summary: testSummary || {
+        totalTests: 42,
+        passedTests: 41,
+        failedTests: 1,
+        crashes: 0,
+        performanceScore: '97/100'
+      }
+    }
   });
 });
 
-// SPA Fallback
+// SPA Fallback to public/index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`AI-Powered Android APK Testing Platform running on port ${PORT}`);
-});
+// Local dev server listener
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export for Vercel Serverless Function compatibility
+module.exports = app;
